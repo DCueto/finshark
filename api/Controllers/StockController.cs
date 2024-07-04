@@ -44,4 +44,26 @@ public class StockController : ControllerBase
 
         return CreatedAtAction(nameof(GetById), new { id = stockModel.StockId }, stockModel.ToStockDto());
     }
+
+    [HttpPut("{id}")]
+    public IActionResult Update([FromRoute] int id, [FromBody] UpdateStockRequestDto updateDto)
+    {
+        var existingStockModel = _context.Stocks.FirstOrDefault(x => x.StockId == id);
+        if (existingStockModel == null)
+            return BadRequest($"This stock with id {id} doesn't exists.");
+
+        existingStockModel.Symbol = updateDto.Symbol;
+        existingStockModel.CompanyName = updateDto.CompanyName;
+        existingStockModel.Purchase = updateDto.Purchase;
+        existingStockModel.LastDiv = updateDto.LastDiv;
+        existingStockModel.Industry = updateDto.Industry;
+        existingStockModel.MarketCap = updateDto.MarketCap;
+
+        // var stockModel = updateDto.ToStockFromUpdateDto();
+        // _context.Stocks.Update(stockModel);
+
+        _context.SaveChanges();
+
+        return Ok(existingStockModel.ToStockDto()); 
+    }
 }

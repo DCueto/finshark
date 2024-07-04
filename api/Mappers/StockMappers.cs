@@ -31,4 +31,17 @@ public static class StockMappers
             MarketCap = createStockDto.MarketCap
         };
     }
+
+    public static Stock ToStockFromUpdateDto(this UpdateStockRequestDto updateStockDto)
+    {
+        return new Stock()
+        {
+            Symbol = updateStockDto.Symbol,
+            CompanyName = updateStockDto.CompanyName,
+            Purchase = updateStockDto.Purchase,
+            LastDiv = updateStockDto.LastDiv,
+            Industry = updateStockDto.Industry,
+            MarketCap = updateStockDto.MarketCap
+        };
+    }
 }
