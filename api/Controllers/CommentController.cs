@@ -49,5 +49,23 @@ namespace api.Controllers
 
             return CreatedAtAction(nameof(GetById), new { id = commentModel.Id }, commentModel.ToCommentDto());
         }
+
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateCommentRequestDto commentRequestDto)
+        {
+            var comment = await _commentRepository.UpdateAsync(id, commentRequestDto.ToCommentFromUpdate());
+            if (comment == null)
+                return NotFound($"Comment not found with id {id}");
+            
+            // Console.WriteLine($"CommentDto before mapped to Comment: Title: {commentRequestDto.Title}, Content: {commentRequestDto.Content}");
+            //
+            // Console.WriteLine($"Comment after mapped from UpdateDto: Id: {comment.Id}, " +
+            //                   $"Title: {comment.Title}, Content: {comment.Content}, StockId: {comment.StockId}, " +
+            //                   $"CreatedOn: {comment.CreatedOn}");
+            
+            return Ok(comment.ToCommentDto());
+        }
+        
     }
 }

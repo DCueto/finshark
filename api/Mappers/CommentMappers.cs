@@ -1,4 +1,5 @@
 using api.DTOs.Comment;
+using api.DTOs.Stock;
 using api.Models;
 
 namespace api.Mappers;
@@ -24,6 +25,15 @@ public static class CommentMappers
             Title = commentRequestDto.Title,
             Content = commentRequestDto.Content,
             StockId = stockId
+        };
+    }
+    
+    public static Comment ToCommentFromUpdate(this UpdateCommentRequestDto commentRequestDto)
+    {
+        return new Comment
+        {
+            Title = commentRequestDto.Title,
+            Content = commentRequestDto.Content
         };
     }
 }
