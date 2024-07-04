@@ -66,4 +66,19 @@ public class StockController : ControllerBase
 
         return Ok(existingStockModel.ToStockDto()); 
     }
+
+    [HttpDelete]
+    [Route("{id}")]
+    public IActionResult Delete([FromRoute] int id)
+    {
+        var existingStockModel = _context.Stocks.FirstOrDefault(x => x.StockId == id);
+
+        if (existingStockModel == null)
+            return NotFound();
+
+        _context.Stocks.Remove(existingStockModel);
+        _context.SaveChanges();
+
+        return NoContent();
+    }
 }
