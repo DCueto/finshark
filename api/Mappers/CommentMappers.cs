@@ -16,4 +16,14 @@ public static class CommentMappers
             StockId = commentModel.StockId
         };
     }
+
+    public static Comment ToCommentFromCreate(this CreateCommentRequestDto commentRequestDto, int stockId)
+    {
+        return new Comment
+        {
+            Title = commentRequestDto.Title,
+            Content = commentRequestDto.Content,
+            StockId = stockId
+        };
+    }
 }
