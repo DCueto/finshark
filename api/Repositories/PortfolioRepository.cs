@@ -1,3 +1,4 @@
+using System.Runtime.Intrinsics.X86;
 using api.Data;
 using api.Interfaces;
 using api.Models;
@@ -16,7 +17,7 @@ public class PortfolioRepository : IPortfolioRepository
     
     public async Task<List<Stock>> GetUserPortfolio(AppUser user)
     {
-        return await _context.Portfolios.Where(p => p.AppUserId == user.Id)
+        var portfolios = await _context.Portfolios.Where(p => p.AppUserId == user.Id)
             .Select(portfolio => new Stock
             {
                 StockId = portfolio.StockId,
@@ -28,6 +29,8 @@ public class PortfolioRepository : IPortfolioRepository
                 MarketCap = portfolio.Stock.MarketCap
             })
             .ToListAsync();
+
+        return portfolios;
     }
 
     public async Task<Portfolio> CreateAsync(int stockId, string userId)
@@ -39,6 +42,19 @@ public class PortfolioRepository : IPortfolioRepository
         };
 
         await _context.Portfolios.AddAsync(portfolioModel);
+        await _context.SaveChangesAsync();
+
+        return portfolioModel;
+    }
+
+    public async Task<Portfolio?> DeletePortfolio(string userId, string symbol)
+    {
+        var portfolioModel = await _context.Portfolios
+            .FirstOrDefaultAsync(x => x.AppUserId == userId && x.Stock.Symbol.ToLower() == symbol.ToLower());
+        if (portfolioModel == null)
+            return null;
+
+        _context.Portfolios.Remove(portfolioModel);
         await _context.SaveChangesAsync();
 
         return portfolioModel;
