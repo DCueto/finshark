@@ -20,6 +20,7 @@ public class StockRepository : IStockRepository
     {
         var stocks = _context.Stocks
             .Include(c => c.Comments)
+            .ThenInclude(c => c.AppUser)
             .AsQueryable();
 
         // Filtering

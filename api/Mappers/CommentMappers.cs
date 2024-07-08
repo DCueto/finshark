@@ -14,17 +14,19 @@ public static class CommentMappers
             Title = commentModel.Title,
             Content = commentModel.Content,
             CreatedOn = commentModel.CreatedOn,
+            CreatedBy = commentModel.AppUser.UserName,
             StockId = commentModel.StockId
         };
     }
 
-    public static Comment ToCommentFromCreate(this CreateCommentRequestDto commentRequestDto, int stockId)
+    public static Comment ToCommentFromCreate(this CreateCommentRequestDto commentRequestDto, int stockId, string userId)
     {
         return new Comment
         {
             Title = commentRequestDto.Title,
             Content = commentRequestDto.Content,
-            StockId = stockId
+            StockId = stockId,
+            AppUserId = userId
         };
     }
     
