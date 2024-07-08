@@ -29,4 +29,18 @@ public class PortfolioRepository : IPortfolioRepository
             })
             .ToListAsync();
     }
+
+    public async Task<Portfolio> CreateAsync(int stockId, string userId)
+    {
+        var portfolioModel = new Portfolio
+        {
+            StockId = stockId,
+            AppUserId = userId
+        };
+
+        await _context.Portfolios.AddAsync(portfolioModel);
+        await _context.SaveChangesAsync();
+
+        return portfolioModel;
+    }
 }

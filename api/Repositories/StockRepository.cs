@@ -52,6 +52,13 @@ public class StockRepository : IStockRepository
             .FirstOrDefaultAsync(s=>s.StockId == id);
     }
 
+    public async Task<Stock?> GetBySymbolAsync(string symbol)
+    {
+        return await _context.Stocks
+            .Include(s => s.Comments)
+            .FirstOrDefaultAsync(s => s.Symbol == symbol);
+    }
+
     public async Task<Stock> CreateAsync(Stock stockModel)
     {
         // var stockModel = stockRequestDto.ToStockFromCreateDto();
