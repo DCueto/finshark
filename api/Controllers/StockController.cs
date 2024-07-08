@@ -2,6 +2,7 @@ using api.DTOs.Stock;
 using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
@@ -18,6 +19,7 @@ public class StockController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
     {
         if (!ModelState.IsValid)
@@ -30,6 +32,7 @@ public class StockController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
+    [Authorize]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
         if (!ModelState.IsValid)
@@ -44,6 +47,7 @@ public class StockController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Create([FromBody] CreateStockRequestDto stockDto)
     {
         if (!ModelState.IsValid)
@@ -56,6 +60,7 @@ public class StockController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [Authorize]
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateStockRequestDto updateDto)
     {
         if (!ModelState.IsValid)
@@ -63,12 +68,13 @@ public class StockController : ControllerBase
         
         var updatedModel = await _stockRepository.UpdateAsync(id, updateDto);
         if (updatedModel == null)
-            return BadRequest($"This stock with id {id} doesn't exists.");
+            return BadRequest($"This stock with id {id} doesn't exists."); 
 
         return Ok(updatedModel.ToStockDto()); 
     }  
  
     [HttpDelete]
+    [Authorize]
     [Route("{id:int}")]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
@@ -80,6 +86,6 @@ public class StockController : ControllerBase
         if (deletedStock == null)
             return NotFound();
 
-        return NoContent(); 
+        return NoContent();  
     }
 }
